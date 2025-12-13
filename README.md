@@ -63,32 +63,31 @@ git clone https://github.com/MaksimDekar/website-for-apr.git
 bash
 Копировать
 cd website-for-apr
+
 Шаг 2: Установка зависимостей
 Установите зависимости:
-bash
+\`\`\`bash
 Копировать
-npm install
+npm install\`\`\`
+
 Шаг 3: Настройка переменных окружения
 Создайте файл .env:
 Если файла .env еще нет, создайте его в корневой директории проекта.
-Скопируйте содержимое из .env.example в .env:
-bash
-Копировать
-cp .env.example .env
 Заполните файл .env:
 Добавьте необходимые переменные окружения, такие как NEXT_PUBLIC_SUPABASE_URL и NEXT_PUBLIC_SUPABASE_ANON_KEY.
-Пример:
-bash
-Копировать
+
+Пример: 
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
 Шаг 4: Запуск проекта
 Запустите проект:
-bash
-Копировать
-npm run dev
+\`\`\`bash
+npm run dev\`\`\`
+
 Шаг 5: Проверка работы проекта
 Откройте браузер и перейдите по адресу http://localhost:3000.
+
 Проверьте, что все страницы и функции работают корректно.
 
 1. Установите зависимости:
