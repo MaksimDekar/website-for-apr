@@ -56,16 +56,18 @@
 Шаг 1: Клонирование репозитория
 Откройте терминал или командную строку.
 Клонируйте репозиторий:
-bash
-Копировать
-git clone https://github.com/MaksimDekar/website-for-apr.git
+
+\`\`\`bash
+git clone https://github.com/MaksimDekar/website-for-apr.git\`\`\`
+
 Перейдите в папку проекта:
-bash
-Копировать
-cd website-for-apr
+
+\`\`\`bash
+cd website-for-apr\`\`\`
 
 Шаг 2: Установка зависимостей
 Установите зависимости:
+
 \`\`\`bash
 Копировать
 npm install\`\`\`
@@ -82,6 +84,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 Шаг 4: Запуск проекта
 Запустите проект:
+
 \`\`\`bash
 npm run dev\`\`\`
 
@@ -91,11 +94,12 @@ npm run dev\`\`\`
 Проверьте, что все страницы и функции работают корректно.
 
 1. Установите зависимости:
+   
 \`\`\`bash
 npm install
 \`\`\`
 
-2. Настройте переменные окружения (уже настроены в v0):
+3. Настройте переменные окружения (уже настроены в v0):
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
 - И другие Supabase переменные
