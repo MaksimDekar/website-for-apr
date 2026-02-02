@@ -35,7 +35,7 @@ export default async function AboutPage() {
                 </p>
                 <div className="flex flex-wrap gap-8">
                   <div>
-                    <div className="font-serif text-3xl font-bold text-primary">{settings?.years_of_experience}+</div>
+                    <div className="font-serif text-3xl font-bold text-primary">10+</div>
                     <div className="text-sm text-muted-foreground">лет на рынке</div>
                   </div>
                   <div>
