@@ -13,7 +13,7 @@ const _playfairDisplay = V0_Font_Playfair_Display({ subsets: ['latin'], weight: 
 const _playfair = Playfair_Display({ subsets: ["latin", "cyrillic"] })
 
 export const metadata: Metadata = {
-  title: "АбсолютПрофРемонт - Профессиональный ремонт и строительство в Москве",
+  title: "АбсолютПрофРемонт - Профессиональный ремонт и строительство в Новосибирске",
   description:
     "Качественный ремонт квартир, дизайн интерьера, коммерческие помещения. Более 10 лет опыта. Гарантия 3 года.",
   generator: "v0.app",
