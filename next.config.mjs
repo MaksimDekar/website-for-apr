@@ -3,15 +3,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'dehznhwfarqhzusngwbr.supabase.co',
+        pathname: 'v1/object/public',
       },
     ],
   },
 }
 
-export default nextConfig
+export default nextConfig;
