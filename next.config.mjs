@@ -10,7 +10,13 @@ const nextConfig = {
         hostname: 'dehznhwfarqhzusngwbr.supabase.co',
         pathname: 'v1/object/public',
       },
+      {
+        protocol: 'https',
+        hostname: 'i.pinimg.com',
+        pathname: '/**',
+      },
     ],
+    unoptimized: true, // ← ОТКЛЮЧАЕМ ОПТИМИЗАЦИЮ
   },
 }
 

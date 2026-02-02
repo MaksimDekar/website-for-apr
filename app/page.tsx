@@ -160,7 +160,7 @@ export default async function HomePage() {
                 <Card key={project.id} className="overflow-hidden group">
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={`/.jpg?height=400&width=600&query=${project.title}`}
+                      src={project.image_url || "/placeholder-image.jpg"}
                       alt={project.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
