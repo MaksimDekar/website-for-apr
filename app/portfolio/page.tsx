@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image" // ← ДОБАВЬТЕ ЭТУ СТРОЧКУ!
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -56,11 +57,11 @@ export default async function PortfolioPage() {
                     <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 h-full">
                       <div className="relative h-64 overflow-hidden bg-muted">
                         <Image
-                        src={project.cover_image || "/placeholder-image.jpg"}
-                        alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          src={project.cover_image || "/placeholder-image.jpg"}
+                          alt={project.title}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                         <div className="absolute top-4 left-4">
                           <Badge className={categories[project.category as keyof typeof categories]?.color || ""}>
