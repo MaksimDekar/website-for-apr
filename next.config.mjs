@@ -3,10 +3,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dehznhwfarqhzusngwbr.supabase.co',
+      },
+    ],
   },
- 
 }
 
 export default nextConfig
