@@ -38,6 +38,38 @@ export function ConsultationForm() {
 
       if (insertError) throw insertError
 
+      // 🔴 ОТПРАВКА В TELEGRAM - НАЧАЛО
+      try {
+        const telegramResponse = await fetch('/api/telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            formType: 'consultation',
+            name: data.full_name,
+            phone: data.phone,
+            email: data.email,
+            property_type: data.property_type,
+            property_area: data.property_area,
+            preferred_date: data.preferred_date,
+            preferred_time: data.preferred_time,
+            message: data.message,
+          }),
+        })
+
+        const telegramResult = await telegramResponse.json()
+        
+        if (!telegramResponse.ok) {
+          console.error('Ошибка отправки в Telegram:', telegramResult.error)
+          // Можно залогировать ошибку, но не показывать пользователю
+        } else {
+          console.log('✅ Уведомление отправлено в Telegram')
+        }
+      } catch (telegramError) {
+        console.error('Ошибка при отправке в Telegram:', telegramError)
+        // Продолжаем выполнение даже при ошибке Telegram
+      }
+      // 🔴 ОТПРАВКА В TELEGRAM - КОНЕЦ
+
       setIsSuccess(true)
       ;(e.target as HTMLFormElement).reset()
 
