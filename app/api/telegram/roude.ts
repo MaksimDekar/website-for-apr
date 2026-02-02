@@ -13,15 +13,37 @@ export async function POST(request: NextRequest) {
     // Формируем сообщение
     let message = ''
     
-    if (formType === 'consultation') {
+    if (formType === 'contact') {
+      message = `📞 *Новый запрос с сайта!*\n\n`
+    } else if (formType === 'consultation') {
       message = `📋 *Новая заявка на консультацию!*\n\n`
     } else {
-      message = `📞 *Новый запрос с сайта!*\n\n`
+      message = `📨 *Новое сообщение с сайта!*\n\n`
     }
     
     message += `👤 *Имя:* ${data.name || 'Не указано'}\n`
     message += `📞 *Телефон:* ${data.phone || 'Не указан'}\n`
     message += `📧 *Email:* ${data.email || 'Не указан'}\n`
+    
+    if (data.service_type) {
+      const serviceTypes: Record<string, string> = {
+        renovation: 'Ремонт квартиры',
+        design: 'Дизайн интерьера',
+        commercial: 'Коммерческое помещение',
+        other: 'Другое'
+      }
+      message += `🔧 *Услуга:* ${serviceTypes[data.service_type] || data.service_type}\n`
+    }
+    
+    if (data.budget_range) {
+      const budgetTypes: Record<string, string> = {
+        up_to_500k: 'До 500 000 ₽',
+        '500k_1m': '500 000 - 1 000 000 ₽',
+        '1m_2m': '1 000 000 - 2 000 000 ₽',
+        '2m_plus': 'Более 2 000 000 ₽'
+      }
+      message += `💰 *Бюджет:* ${budgetTypes[data.budget_range] || data.budget_range}\n`
+    }
     
     if (data.message) {
       message += `📝 *Сообщение:* ${data.message}\n`
