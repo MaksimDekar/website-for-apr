@@ -23,8 +23,12 @@ export async function POST(request: NextRequest) {
     
     message += `👤 *Имя:* ${data.name || 'Не указано'}\n`
     message += `📞 *Телефон:* ${data.phone || 'Не указан'}\n`
-    message += `📧 *Email:* ${data.email || 'Не указан'}\n`
     
+    if (data.email) {
+      message += `📧 *Email:* ${data.email}\n`
+    }
+    
+    // Для ContactForm
     if (data.service_type) {
       const serviceTypes: Record<string, string> = {
         renovation: 'Ремонт квартиры',
@@ -45,19 +49,30 @@ export async function POST(request: NextRequest) {
       message += `💰 *Бюджет:* ${budgetTypes[data.budget_range] || data.budget_range}\n`
     }
     
+    // Для ConsultationForm
+    if (data.property_type) {
+      message += `🏠 *Тип объекта:* ${data.property_type}\n`
+    }
+    
+    if (data.property_area) {
+      message += `📏 *Площадь:* ${data.property_area} м²\n`
+    }
+    
+    if (data.preferred_date) {
+      const date = new Date(data.preferred_date)
+      const formattedDate = date.toLocaleDateString('ru-RU')
+      message += `📅 *Предпочтительная дата:* ${formattedDate}\n`
+    }
+    
+    if (data.preferred_time) {
+      message += `⏰ *Предпочтительное время:* ${data.preferred_time}\n`
+    }
+    
     if (data.message) {
       message += `📝 *Сообщение:* ${data.message}\n`
     }
     
-    if (data.project_type) {
-      message += `🏠 *Тип проекта:* ${data.project_type}\n`
-    }
-    
-    if (data.area) {
-      message += `📏 *Площадь:* ${data.area} м²\n`
-    }
-    
-    message += `⏰ *Время:* ${new Date().toLocaleString('ru-RU')}\n`
+    message += `⏱️ *Получено:* ${new Date().toLocaleString('ru-RU')}\n`
     
     // Отправляем в Telegram
     const response = await fetch(
