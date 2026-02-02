@@ -164,7 +164,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
               <div className="relative">
                 <img
-                  src={`/.jpg?height=600&width=800&query=${project.title} main view`}
+                  src={project.image_url || "/placeholder-image.jpg"}
                   alt={project.title}
                   className="rounded-2xl shadow-2xl w-full h-auto"
                 />
