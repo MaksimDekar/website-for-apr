@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,6 +36,36 @@ export function ContactForm() {
 
       if (insertError) throw insertError
 
+      // 🔴 ОТПРАВКА В TELEGRAM - НАЧАЛО
+      try {
+        const telegramResponse = await fetch('/api/telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            formType: 'contact',
+            name: data.full_name,
+            phone: data.phone,
+            email: data.email,
+            service_type: data.service_type,
+            message: data.message,
+            budget: data.budget_range,
+          }),
+        })
+
+        const telegramResult = await telegramResponse.json()
+        
+        if (!telegramResponse.ok) {
+          console.error('Ошибка отправки в Telegram:', telegramResult.error)
+          // Можно залогировать ошибку, но не показывать пользователю
+        } else {
+          console.log('✅ Уведомление отправлено в Telegram')
+        }
+      } catch (telegramError) {
+        console.error('Ошибка при отправке в Telegram:', telegramError)
+        // Продолжаем выполнение даже при ошибке Telegram
+      }
+      // 🔴 ОТПРАВКА В TELEGRAM - КОНЕЦ
+
       setIsSuccess(true)
       ;(e.target as HTMLFormElement).reset()
 
@@ -48,6 +76,9 @@ export function ContactForm() {
       setIsLoading(false)
     }
   }
+
+  // 🔴 ВАЖНО: Создайте API endpoint для Telegram
+  // Создайте файл: app/api/telegram/route.ts
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
