@@ -57,7 +57,7 @@ export default async function PortfolioPage() {
                     <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 h-full">
                       <div className="relative h-64 overflow-hidden bg-muted">
                         <Image
-                          src={project.cover_image || "/placeholder-image.jpg"}
+                          src={project.image_url || "/placeholder-image.jpg"}
                           alt={project.title}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-500"
