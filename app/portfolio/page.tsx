@@ -55,10 +55,12 @@ export default async function PortfolioPage() {
                   <Link key={project.id} href={`/portfolio/${project.id}`}>
                     <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 h-full">
                       <div className="relative h-64 overflow-hidden bg-muted">
-                        <img
-                          src={`/.jpg?height=400&width=600&query=${project.title}`}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        <Image
+                        src={project.cover_image || "/placeholder-image.jpg"}
+                        alt={project.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                         <div className="absolute top-4 left-4">
                           <Badge className={categories[project.category as keyof typeof categories]?.color || ""}>
