@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Building2, Paintbrush, Store, Award, ArrowRight, Star } from "lucide-react"
+import { Building2, Paintbrush, Store, Award, ArrowRight, ExternalLink } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function HomePage() {
@@ -22,8 +22,6 @@ export default async function HomePage() {
     .eq("is_featured", true)
     .eq("is_published", true)
     .limit(3)
-
-  const { data: reviews } = await supabase.from("reviews").select("*").eq("is_published", true).limit(3)
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -49,7 +47,7 @@ export default async function HomePage() {
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" asChild>
+                  <Button size="lg" variant="outline" className="bg-transparent" asChild>
                     <Link href="/portfolio">Наши работы</Link>
                   </Button>
                 </div>
@@ -137,7 +135,7 @@ export default async function HomePage() {
             </div>
 
             <div className="text-center">
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="outline" size="lg" className="bg-transparent" asChild>
                 <Link href="/services">
                   Все услуги
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -180,7 +178,7 @@ export default async function HomePage() {
             </div>
 
             <div className="text-center">
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="outline" size="lg" className="bg-transparent" asChild>
                 <Link href="/portfolio">
                   Все проекты
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -190,7 +188,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Reviews Section */}
+        {/* Reviews Section - Flamp Widget */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -200,20 +198,42 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {reviews?.map((review) => (
-                <Card key={review.id}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-1 mb-4">
-                      {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                      ))}
-                    </div>
-                    <p className="text-sm leading-relaxed mb-4 text-pretty">"{review.comment}"</p>
-                    <div className="font-semibold">{review.client_name}</div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="max-w-4xl mx-auto">
+              <Card className="bg-gradient-to-br from-orange-50 to-white dark:from-orange-950/20 dark:to-background border-orange-200 dark:border-orange-900">
+                <CardContent className="p-8 text-center">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <img 
+                      src="https://flamp.ru/favicon.ico" 
+                      alt="Flamp" 
+                      className="w-8 h-8"
+                    />
+                    <span className="text-2xl font-bold text-orange-600">Мы есть на Флампе!</span>
+                  </div>
+                  <p className="text-muted-foreground mb-6">
+                    Читайте реальные отзывы наших клиентов на независимой платформе Flamp
+                  </p>
+                  <Button asChild className="bg-orange-600 hover:bg-orange-700">
+                    <a 
+                      href="https://novosibirsk.flamp.ru/firm/absolyutprofremont_remontno_otdelochnaya_kompaniya-70000001020667161" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2"
+                    >
+                      Смотреть отзывы на Флампе
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="text-center mt-8">
+              <Button variant="outline" size="lg" className="bg-transparent" asChild>
+                <Link href="/reviews">
+                  Все отзывы
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
