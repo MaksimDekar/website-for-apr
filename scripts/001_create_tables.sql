@@ -64,17 +64,6 @@ CREATE TABLE IF NOT EXISTS public.team_members (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Client reviews
-CREATE TABLE IF NOT EXISTS public.reviews (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_name TEXT NOT NULL,
-  project_id UUID REFERENCES public.projects(id) ON DELETE SET NULL,
-  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-  comment TEXT NOT NULL,
-  is_published BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
 -- Contact requests
 CREATE TABLE IF NOT EXISTS public.contact_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -150,7 +139,6 @@ ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.project_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contact_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.consultation_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
@@ -160,7 +148,6 @@ CREATE POLICY "services_public_read" ON public.services FOR SELECT USING (is_act
 CREATE POLICY "projects_public_read" ON public.projects FOR SELECT USING (is_published = true);
 CREATE POLICY "project_images_public_read" ON public.project_images FOR SELECT USING (true);
 CREATE POLICY "team_members_public_read" ON public.team_members FOR SELECT USING (is_active = true);
-CREATE POLICY "reviews_public_read" ON public.reviews FOR SELECT USING (is_published = true);
 CREATE POLICY "site_settings_public_read" ON public.site_settings FOR SELECT USING (true);
 
 -- Public insert policies (for contact forms - no auth required)

@@ -3,14 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, FileText, Briefcase, Users, MessageSquare, Mail, Settings, Star } from "lucide-react"
+import { LayoutDashboard, FileText, Briefcase, Users, MessageSquare, Mail, Settings } from "lucide-react"
 
 const navigation = [
   { name: "Главная", href: "/admin", icon: LayoutDashboard },
   { name: "Услуги", href: "/admin/services", icon: FileText },
   { name: "Проекты", href: "/admin/projects", icon: Briefcase },
   { name: "Команда", href: "/admin/team", icon: Users },
-  { name: "Отзывы", href: "/admin/reviews", icon: Star },
   { name: "Обращения", href: "/admin/contacts", icon: MessageSquare },
   { name: "Консультации", href: "/admin/consultations", icon: Mail },
   { name: "Настройки", href: "/admin/settings", icon: Settings },
