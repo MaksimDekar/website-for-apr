@@ -11,6 +11,7 @@ const nextConfig = {
         pathname: 'v1/object/public',
       },
     ],
+    unoptimized: true, // ← ОТКЛЮЧАЕМ ОПТИМИЗАЦИЮ
   },
 }
 
