@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!
-const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS!
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
+    
+    // 🔴 ВАЖНО: Получаем все chat_id из строки, разделенной запятыми
+    const chatIdsString = process.env.TELEGRAM_CHAT_IDS || ''
+    const chatIds = chatIdsString
+      .split(',')
+      .map(id => id.trim())
+      .filter(id => id.length > 0)
+    
+    if (chatIds.length === 0) {
+      console.error('❌ Нет chat_id в TELEGRAM_CHAT_IDS')
+      return NextResponse.json(
+        { error: 'Не настроены чаты для уведомлений' },
+        { status: 500 }
+      )
+    }
+    
+    console.log(`📨 Будем отправлять в ${chatIds.length} чатов:`, chatIds)
     
     // Определяем тип формы
     const formType = data.formType || 'contact'
@@ -74,31 +90,36 @@ export async function POST(request: NextRequest) {
     
     message += `⏱️ *Получено:* ${new Date().toLocaleString('ru-RU')}\n`
     
-    // Отправляем в Telegram
-    const response = await fetch(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown',
-        }),
-      }
-    )
-
-    const result = await response.json()
-    
-    if (!result.ok) {
-      console.error('Ошибка Telegram:', result)
-      return NextResponse.json(
-        { error: result.description },
-        { status: 500 }
+    // 🔴 ОТПРАВЛЯЕМ ВО ВСЕ ЧАТЫ
+    const results = await Promise.allSettled(
+      chatIds.map(chatId =>
+        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'Markdown',
+          }),
+        })
       )
-    }
-
-    return NextResponse.json({ success: true })
+    )
+    
+    // Логируем результаты
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        console.log(`✅ Успешно отправлено в чат: ${chatIds[index]}`)
+      } else {
+        console.error(`❌ Ошибка отправки в чат ${chatIds[index]}:`, result.reason)
+      }
+    })
+    
+    return NextResponse.json({ 
+      success: true,
+      formType,
+      sentTo: chatIds.length,
+      chatIds
+    })
     
   } catch (error: any) {
     console.error('Ошибка:', error)
