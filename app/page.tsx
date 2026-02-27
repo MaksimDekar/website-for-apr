@@ -34,7 +34,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h1 className="text-4xl md:text-6xl font-bold text-balance mb-6 font-serif">
-                  Профессиональный ремонт любой сложности
+                  Профессиональный рем любой сложности
                 </h1>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-pretty">
                   Создаем комфортные и качественные пространства для жизни и бизнеса. Более 10 лет опыта, гарантия на
@@ -202,9 +202,9 @@ export default async function HomePage() {
               <Card className="bg-gradient-to-br from-orange-50 to-white dark:from-orange-950/20 dark:to-background border-orange-200 dark:border-orange-900">
                 <CardContent className="p-8 text-center">
                   <div className="flex items-center justify-center gap-3 mb-4">
-                    <img 
-                      src="https://flamp.ru/favicon.ico" 
-                      alt="Flamp" 
+                    <img
+                      src="https://flamp.ru/favicon.ico"
+                      alt="Flamp"
                       className="w-8 h-8"
                     />
                     <span className="text-2xl font-bold text-orange-600">Мы есть на Флампе!</span>
@@ -213,9 +213,9 @@ export default async function HomePage() {
                     Читайте реальные отзывы наших клиентов на независимой платформе Flamp
                   </p>
                   <Button asChild className="bg-orange-600 hover:bg-orange-700">
-                    <a 
-                      href="https://novosibirsk.flamp.ru/firm/absolyutprofremont_remontno_otdelochnaya_kompaniya-70000001020667161" 
-                      target="_blank" 
+                    <a
+                      href="https://novosibirsk.flamp.ru/firm/absolyutprofremont_remontno_otdelochnaya_kompaniya-70000001020667161"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2"
                     >
