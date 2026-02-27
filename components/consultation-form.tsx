@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -34,11 +33,17 @@ export function ConsultationForm() {
 
     try {
       const supabase = createClient()
-      const { error: insertError } = await supabase.from("consultation_requests").insert([data])
+
+      // Получаем текущего пользователя (если авторизован)
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { error: insertError } = await supabase
+        .from("consultation_requests")
+        .insert([{ ...data, user_id: user?.id ?? null }])
 
       if (insertError) throw insertError
 
-      // 🔴 ОТПРАВКА В TELEGRAM - НАЧАЛО
+      // Отправка в Telegram
       try {
         const telegramResponse = await fetch('/api/telegram', {
           method: 'POST',
@@ -55,24 +60,16 @@ export function ConsultationForm() {
             message: data.message,
           }),
         })
-
-        const telegramResult = await telegramResponse.json()
-        
         if (!telegramResponse.ok) {
-          console.error('Ошибка отправки в Telegram:', telegramResult.error)
-          // Можно залогировать ошибку, но не показывать пользователю
-        } else {
-          console.log('✅ Уведомление отправлено в Telegram')
+          const result = await telegramResponse.json()
+          console.error('Ошибка отправки в Telegram:', result.error)
         }
       } catch (telegramError) {
         console.error('Ошибка при отправке в Telegram:', telegramError)
-        // Продолжаем выполнение даже при ошибке Telegram
       }
-      // 🔴 ОТПРАВКА В TELEGRAM - КОНЕЦ
 
       setIsSuccess(true)
-      ;(e.target as HTMLFormElement).reset()
-
+        ; (e.target as HTMLFormElement).reset()
       setTimeout(() => setIsSuccess(false), 5000)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Произошла ошибка при отправке формы")
@@ -95,16 +92,8 @@ export function ConsultationForm() {
           <Label htmlFor="cons_phone">
             Телефон <span className="text-destructive">*</span>
           </Label>
-          <Input
-            id="cons_phone"
-            name="phone"
-            type="tel"
-            placeholder="+7 (999) 123-45-67"
-            required
-            disabled={isLoading}
-          />
+          <Input id="cons_phone" name="phone" type="tel" placeholder="+7 (999) 123-45-67" required disabled={isLoading} />
         </div>
-
         <div className="space-y-2">
           <Label htmlFor="cons_email">Email</Label>
           <Input id="cons_email" name="email" type="email" placeholder="ivan@example.com" disabled={isLoading} />
@@ -116,17 +105,9 @@ export function ConsultationForm() {
           <Label htmlFor="property_type">Тип объекта</Label>
           <Input id="property_type" name="property_type" placeholder="Квартира, офис..." disabled={isLoading} />
         </div>
-
         <div className="space-y-2">
           <Label htmlFor="property_area">Площадь (м²)</Label>
-          <Input
-            id="property_area"
-            name="property_area"
-            type="number"
-            step="0.1"
-            placeholder="65"
-            disabled={isLoading}
-          />
+          <Input id="property_area" name="property_area" type="number" step="0.1" placeholder="65" disabled={isLoading} />
         </div>
       </div>
 
@@ -135,7 +116,6 @@ export function ConsultationForm() {
           <Label htmlFor="preferred_date">Предпочтительная дата</Label>
           <Input id="preferred_date" name="preferred_date" type="date" disabled={isLoading} />
         </div>
-
         <div className="space-y-2">
           <Label htmlFor="preferred_time">Предпочтительное время</Label>
           <Input id="preferred_time" name="preferred_time" type="time" placeholder="14:00" disabled={isLoading} />
@@ -144,13 +124,7 @@ export function ConsultationForm() {
 
       <div className="space-y-2">
         <Label htmlFor="cons_message">Комментарий</Label>
-        <Textarea
-          id="cons_message"
-          name="message"
-          placeholder="Дополнительная информация о вашем проекте..."
-          rows={4}
-          disabled={isLoading}
-        />
+        <Textarea id="cons_message" name="message" placeholder="Дополнительная информация о вашем проекте..." rows={4} disabled={isLoading} />
       </div>
 
       {error && (
