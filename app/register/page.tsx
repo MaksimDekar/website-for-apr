@@ -48,7 +48,7 @@ export default function RegisterPage() {
             router.push("/dashboard")
             router.refresh()
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Произошла ошибка при регистрации")
+            setError(err instanceof Error ? err.message : JSON.stringify(err))
         } finally {
             setIsLoading(false)
         }
