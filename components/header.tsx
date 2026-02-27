@@ -1,10 +1,14 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Phone } from "lucide-react"
+import { Phone, User, LogIn } from "lucide-react"
 import { MobileNav } from "@/components/mobile-nav"
+import { createClient } from "@/lib/supabase/server"
 import Image from "next/image"
 
-export function Header() {
+export async function Header() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
@@ -41,7 +45,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <div className="hidden lg:flex flex-col items-end">
               <a
-                href="tel:+74951234567"
+                href="tel:+79050943216"
                 className="flex items-center gap-2 text-sm font-semibold hover:text-primary transition-colors"
               >
                 <Phone className="h-4 w-4" />
@@ -49,6 +53,23 @@ export function Header() {
               </a>
               <span className="text-xs text-muted-foreground">{"Пн-Пт: 9:00-18:00"}</span>
             </div>
+
+            {user ? (
+              <Button asChild size="sm" variant="outline" className="hidden sm:flex">
+                <Link href="/dashboard">
+                  <User className="mr-2 h-4 w-4" />
+                  Личный кабинет
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild size="sm" variant="outline" className="hidden sm:flex">
+                <Link href="/login">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Войти
+                </Link>
+              </Button>
+            )}
+
             <Button asChild size="sm" className="hidden sm:flex">
               <Link href="/contacts#consultation">Бесплатная консультация</Link>
             </Button>
