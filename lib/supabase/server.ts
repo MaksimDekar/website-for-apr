@@ -25,3 +25,6 @@ export async function createClient() {
     }
   )
 }
+
+// Алиас для обратной совместимости с существующим кодом
+export const createServerClient = createClient
