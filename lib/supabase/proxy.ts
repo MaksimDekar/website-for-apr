@@ -2,9 +2,7 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,29 +14,67 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
         },
       },
-    },
+    }
   )
 
-  // Do not run code between createServerClient and supabase.auth.getUser()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+  const path = request.nextUrl.pathname
 
-  if (request.nextUrl.pathname.startsWith("/admin") && !user && request.nextUrl.pathname !== "/admin/login") {
+  // /admin — только для авторизованных
+  if (path.startsWith("/admin") && !user && path !== "/admin/login") {
     const url = request.nextUrl.clone()
     url.pathname = "/admin/login"
     return NextResponse.redirect(url)
   }
 
-  if (request.nextUrl.pathname === "/admin/login" && user) {
+  // /admin/login — если уже вошёл, редиректим в админку
+  if (path === "/admin/login" && user) {
+    // Проверяем роль
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+
+    if (profile?.role === "admin") {
+      const url = request.nextUrl.clone()
+      url.pathname = "/admin"
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // /admin — проверяем что пользователь именно админ
+  if (path.startsWith("/admin") && path !== "/admin/login" && user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+
+    if (!profile || profile.role !== "admin") {
+      const url = request.nextUrl.clone()
+      url.pathname = "/"
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // /dashboard — только для авторизованных
+  if (path.startsWith("/dashboard") && !user) {
     const url = request.nextUrl.clone()
-    url.pathname = "/admin"
+    url.pathname = "/login"
+    return NextResponse.redirect(url)
+  }
+
+  // /login и /register — если уже авторизован, редиректим в кабинет
+  if ((path === "/login" || path === "/register") && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/dashboard"
     return NextResponse.redirect(url)
   }
 
