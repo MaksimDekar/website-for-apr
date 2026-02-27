@@ -34,7 +34,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h1 className="text-4xl md:text-6xl font-bold text-balance mb-6 font-serif">
-                  Профессиональный рем любой сложности
+                  Профессиональный ремонт любой сложности
                 </h1>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-pretty">
                   Создаем комфортные и качественные пространства для жизни и бизнеса. Более 10 лет опыта, гарантия на
