@@ -28,21 +28,34 @@ export default function RegisterPage() {
         const supabase = createClient()
 
         try {
-            const { data, error: signUpError } = await supabase.auth.signUp({
+            // Регистрируем пользователя
+            const { error: signUpError } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    data: {
+                        full_name: fullName,
+                        phone: phone,
+                    }
+                }
             })
 
             if (signUpError) throw signUpError
 
-            // Обновляем профиль с именем и телефоном
-            if (data.user) {
-                const { error: profileError } = await supabase
+            // Входим сразу после регистрации
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            })
+
+            if (signInError) throw signInError
+
+            // Теперь обновляем профиль — пользователь уже авторизован
+            if (signInData.user) {
+                await supabase
                     .from("profiles")
                     .update({ full_name: fullName, phone })
-                    .eq("id", data.user.id)
-
-                if (profileError) throw profileError
+                    .eq("id", signInData.user.id)
             }
 
             router.push("/dashboard")
