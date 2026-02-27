@@ -3,12 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, FileText, Briefcase, Users, MessageSquare, Mail, Settings } from "lucide-react"
+import { LayoutDashboard, FileText, Briefcase, Users, MessageSquare, Mail, Settings, HardHat } from "lucide-react"
 
 const navigation = [
   { name: "Главная", href: "/admin", icon: LayoutDashboard },
   { name: "Услуги", href: "/admin/services", icon: FileText },
   { name: "Проекты", href: "/admin/projects", icon: Briefcase },
+  { name: "Проекты клиентов", href: "/admin/client-projects", icon: HardHat },
   { name: "Команда", href: "/admin/team", icon: Users },
   { name: "Обращения", href: "/admin/contacts", icon: MessageSquare },
   { name: "Консультации", href: "/admin/consultations", icon: Mail },
@@ -34,7 +35,7 @@ export function AdminNav() {
         <nav className="flex-1 space-y-1 px-3 py-4">
           {navigation.map((item) => {
             const Icon = item.icon
-            const isActive = pathname === item.href
+            const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
             return (
               <Link
                 key={item.name}
