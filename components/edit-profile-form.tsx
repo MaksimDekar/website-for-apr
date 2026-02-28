@@ -6,8 +6,8 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Loader2, Pencil } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Loader2, Pencil, X, Check } from "lucide-react"
 
 interface EditProfileFormProps {
     userId: string
@@ -16,7 +16,7 @@ interface EditProfileFormProps {
 }
 
 export function EditProfileForm({ userId, initialName, initialPhone }: EditProfileFormProps) {
-    const [open, setOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
     const [name, setName] = useState(initialName)
     const [phone, setPhone] = useState(initialPhone)
     const [isLoading, setIsLoading] = useState(false)
@@ -36,52 +36,54 @@ export function EditProfileForm({ userId, initialName, initialPhone }: EditProfi
         if (updateError) {
             setError(updateError.message)
         } else {
-            setOpen(false)
+            setIsOpen(false)
             router.refresh()
         }
 
         setIsLoading(false)
     }
 
+    if (!isOpen) {
+        return (
+            <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Редактировать
+            </Button>
+        )
+    }
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Редактировать
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Редактировать профиль</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 pt-2">
-                    <div className="space-y-2">
-                        <Label>Имя</Label>
-                        <Input
-                            placeholder="Иван Иванов"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Телефон</Label>
-                        <Input
-                            type="tel"
-                            placeholder="+7 (999) 123-45-67"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                        />
-                    </div>
-                    {error && <p className="text-sm text-destructive">{error}</p>}
-                    <div className="flex gap-2 justify-end">
-                        <Button variant="outline" onClick={() => setOpen(false)}>Отмена</Button>
-                        <Button onClick={handleSave} disabled={isLoading}>
-                            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Сохранение...</> : "Сохранить"}
-                        </Button>
-                    </div>
+        <Card className="w-full sm:w-72">
+            <CardContent className="pt-4 space-y-3">
+                <div className="space-y-1">
+                    <Label className="text-xs">Имя</Label>
+                    <Input
+                        placeholder="Иван Иванов"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        disabled={isLoading}
+                    />
                 </div>
-            </DialogContent>
-        </Dialog>
+                <div className="space-y-1">
+                    <Label className="text-xs">Телефон</Label>
+                    <Input
+                        type="tel"
+                        placeholder="+7 (999) 123-45-67"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        disabled={isLoading}
+                    />
+                </div>
+                {error && <p className="text-xs text-destructive">{error}</p>}
+                <div className="flex gap-2">
+                    <Button size="sm" onClick={handleSave} disabled={isLoading} className="flex-1">
+                        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Check className="mr-1 h-4 w-4" />Сохранить</>}
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
     )
 }
