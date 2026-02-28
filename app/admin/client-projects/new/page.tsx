@@ -45,7 +45,9 @@ export default function NewClientProjectPage() {
     useEffect(() => {
         const loadUsers = async () => {
             const response = await fetch("/api/admin/users")
+            console.log("Status:", response.status)
             const data = await response.json()
+            console.log("Users:", data)
             setUsers(data || [])
         }
         loadUsers()
