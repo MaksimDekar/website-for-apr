@@ -44,11 +44,8 @@ export default function NewClientProjectPage() {
 
     useEffect(() => {
         const loadUsers = async () => {
-            const supabase = createClient()
-            const { data } = await supabase
-                .from("profiles")
-                .select("id, full_name, email")
-                .eq("role", "user")
+            const response = await fetch("/api/admin/users")
+            const data = await response.json()
             setUsers(data || [])
         }
         loadUsers()
