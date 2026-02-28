@@ -1,5 +1,20 @@
 import { createServerClient } from "@supabase/ssr"
+import { createClient } from "@supabase/supabase-js"
 import { NextResponse, type NextRequest } from "next/server"
+
+async function getAdminRole(userId: string): Promise<string | null> {
+  // Используем service role для обхода RLS
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .single()
+  return data?.role ?? null
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -33,33 +48,22 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // /admin/login — если уже вошёл, редиректим в админку
-  if (path === "/admin/login" && user) {
-    // Проверяем роль
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single()
-
-    if (profile?.role === "admin") {
+  // /admin — проверяем роль
+  if (path.startsWith("/admin") && path !== "/admin/login" && user) {
+    const role = await getAdminRole(user.id)
+    if (role !== "admin") {
       const url = request.nextUrl.clone()
-      url.pathname = "/admin"
+      url.pathname = "/"
       return NextResponse.redirect(url)
     }
   }
 
-  // /admin — проверяем что пользователь именно админ
-  if (path.startsWith("/admin") && path !== "/admin/login" && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single()
-
-    if (!profile || profile.role !== "admin") {
+  // /admin/login — если уже вошёл как админ, редиректим
+  if (path === "/admin/login" && user) {
+    const role = await getAdminRole(user.id)
+    if (role === "admin") {
       const url = request.nextUrl.clone()
-      url.pathname = "/"
+      url.pathname = "/admin"
       return NextResponse.redirect(url)
     }
   }
@@ -71,7 +75,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // /login и /register — если уже авторизован, редиректим в кабинет
+  // /login и /register — если уже авторизован
   if ((path === "/login" || path === "/register") && user) {
     const url = request.nextUrl.clone()
     url.pathname = "/dashboard"
